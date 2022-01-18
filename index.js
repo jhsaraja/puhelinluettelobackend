@@ -83,6 +83,12 @@ app.post('/api/persons', (request, response) => {
     })
   }
 
+  if (persons.find(person => person.name === body.name)) {
+    return response.status(400).json({ 
+      error: 'Name must be unique' 
+    })
+  }
+
   if (!body.number) {
     return response.status(400).json({ 
       error: 'Number missing' 
@@ -100,7 +106,7 @@ app.post('/api/persons', (request, response) => {
   while ((persons.find(person => person.id === id)) && (i < 10)); 
 
   if (i === 10) {
-    return response.status(400).json({ 
+    return response.status(500).json({ 
       error: 'Failed to get id' 
     })
   }
