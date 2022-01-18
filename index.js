@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 
+app.use(express.json())
+
 let persons = [  
   {
     "name": "Arto Hellas",
@@ -52,6 +54,66 @@ app.delete('/api/persons/:id', (request, response) => {
   persons = persons.filter(person => person.id !== id)
 
   response.status(204).end()
+})
+
+/*
+  Method returns a random integer between min and max values. 
+  The returned value is not lower than min (or the next integer greater than min if min isn't an integer) 
+  and is less than (but not equal to) max. 
+*/
+const generateId = (min, max) => {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min) + min); 
+}
+
+app.post('/api/persons', (request, response) => {
+  const body = request.body
+  console.log(request.body)
+
+  if (!body) {
+    return response.status(400).json({ 
+      error: 'body missing' 
+    })
+  }
+
+  if (!body.name) {
+    return response.status(400).json({ 
+      error: 'Name missing' 
+    })
+  }
+
+  if (!body.number) {
+    return response.status(400).json({ 
+      error: 'Number missing' 
+    })
+  }
+
+  var id
+  var i = 0;
+
+  do {
+    id = generateId(10,100000)
+    console.log("id " + id)
+    i++
+  }
+  while ((persons.find(person => person.id === id)) && (i < 10)); 
+
+  if (i === 10) {
+    return response.status(400).json({ 
+      error: 'Failed to get id' 
+    })
+  }
+
+  const person = {
+    name: body.name,
+    number: body.number,
+    id: id,
+  }
+
+  persons = persons.concat(person)
+
+  response.json(person)
 })
 
 const PORT = 3001
