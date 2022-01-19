@@ -1,15 +1,21 @@
 const express = require('express')
-const morgan = require('morgan')
+var morgan = require('morgan')
+
+// New token to morgan to get also content of the request
+morgan.token('data', function(req) {
+  return JSON.stringify(req.body)
+});
 
 const app = express()
 
 app.use(express.json())
 
 /* 
-morgan logs to console: POST /api/persons/ 200 52 - 4.381 ms 
+morgan with tiny logs to console: POST /api/persons/ 200 52 - 4.381 ms 
 (:method :url :status :res[content-length] - :response-time ms)
 */
-app.use(morgan('tiny'))  
+//app.use(morgan('tiny'))  
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
 
 let persons = [  
   {
