@@ -1,7 +1,15 @@
 const express = require('express')
+const morgan = require('morgan')
+
 const app = express()
 
 app.use(express.json())
+
+/* 
+morgan logs to console: POST /api/persons/ 200 52 - 4.381 ms 
+(:method :url :status :res[content-length] - :response-time ms)
+*/
+app.use(morgan('tiny'))  
 
 let persons = [  
   {
