@@ -1,5 +1,6 @@
 const express = require('express')
 var morgan = require('morgan')
+const cors = require('cors')
 
 // New token to morgan to get also content of the request
 morgan.token('data', function(req) {
@@ -9,6 +10,7 @@ morgan.token('data', function(req) {
 const app = express()
 
 app.use(express.json())
+app.use(cors())
 
 /* 
 morgan with tiny logs to console: POST /api/persons/ 200 52 - 4.381 ms 
